@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 보행 그래프의 지점(노드) 데이터 - 누구나 읽을 수 있지만
+    // 클라이언트에서 직접 쓰지는 못하게 막고, 관리자용 시드 스크립트(Admin SDK)로만 갱신합니다.
+    match /nodes/{nodeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 보행 그래프의 간선(도로 구간) 데이터 - 경사도, 계단, 엘리베이터, 점자블록 속성 포함
+    match /edges/{edgeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

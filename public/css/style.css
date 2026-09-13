@@ -1,0 +1,433 @@
+/*
+  디자인 콘셉트 — "안내소" (station information kiosk)
+
+  기존 UI의 기능·구조·엘리먼트 id는 전혀 건드리지 않고, 시각 언어만
+  한국 지하철 환경에서 실제로 쓰이는 무장애 안내 요소에서 가져왔다.
+
+    · 점자유도블록의 노란색과 돌기 패턴 → 헤더 아래 촉지 스트립, 리스트의
+      점(dot) 마커에 반복 사용해 하나의 일관된 "촉지" 모티프로 삼는다.
+    · "1번 출구, 2번 출구" 식의 출구 번호 체계 → 좌측 패널의 입력 단계를
+      번호 배지로 표시하고, 선택된 경로의 노드 순서도 같은 배지로 센다.
+    · 개찰구에서 나오는 승차권 → 결과 카드 상단을 절취선(perforation)으로
+      마감해 "발권된 경로표"처럼 보이게 한다.
+    · 눌리는 실물 버튼 → 주요 버튼에 하드 오프셋 섀도를 주고 클릭 시
+      눌리는 것처럼 움직이게 한다.
+
+  색상 토큰
+    --color-paper   #F4F1E7  본문 배경 — 역사 안내판 종이/콘크리트 톤
+    --color-panel   #FFFFFF  패널·카드 표면
+    --color-ink     #201E1A  본문 텍스트
+    --color-ink-soft#5B584F  보조 텍스트
+    --color-navy    #16284A  헤더/라벨/구조선 — 노선도 남색
+    --color-yellow  #F5B301  점자블록 옐로 — 주요 액션, 선택 상태
+    --color-teal    #1D7268  무장애 시설(엘리베이터/경사로), 연석 효과
+    --color-brick   #B23A2E  회피 구간, 오류/경고
+    --color-line    #E4DECC  결선(hairline)
+
+  글꼴
+    IBM Plex Sans KR — 워드마크, 라벨, 숫자 배지 (안내 사인용 디스플레이체)
+    Pretendard        — 본문, select, 리스트 (한글 UI 표준 서체)
+*/
+
+:root {
+  --color-paper: #f4f1e7;
+  --color-panel: #ffffff;
+  --color-ink: #201e1a;
+  --color-ink-soft: #5b584f;
+  --color-navy: #16284a;
+  --color-yellow: #f5b301;
+  --color-teal: #1d7268;
+  --color-brick: #b23a2e;
+  --color-line: #e4decc;
+
+  --font-display: "IBM Plex Sans KR", "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --font-body: "Pretendard", "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- header ---------- */
+
+.topbar {
+  padding: 18px 28px 16px;
+  background: var(--color-navy);
+  color: #fff;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: 0.01em;
+}
+
+.wordmark::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  background: var(--color-yellow);
+  transform: rotate(45deg);
+  flex: none;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  color: #b9c2d9;
+}
+
+/* 점자블록 질감의 촉지 스트립 — 이 화면에서 가장 강조되는 시각 장치 */
+.tactile-strip {
+  height: 9px;
+  background-color: var(--color-navy);
+  background-image: radial-gradient(var(--color-yellow) 1.5px, transparent 1.6px);
+  background-size: 11px 11px;
+  background-position: 5px 4px;
+}
+
+/* ---------- layout ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: calc(100% - 79px);
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 44vh;
+  }
+}
+
+.panel {
+  background: var(--color-panel);
+  border-right: 1px solid var(--color-line);
+  border-top: 4px solid var(--color-navy);
+  padding: 24px 22px;
+  overflow-y: auto;
+}
+
+/* ---------- fields ---------- */
+
+.field-group { margin-bottom: 20px; }
+
+.field-group label {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+
+/* 출구 번호판을 본뜬 단계 배지 */
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: var(--color-yellow);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  flex: none;
+}
+
+select {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 36px 9px 12px;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--color-ink);
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2316284A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 13px;
+}
+
+/* ---------- profile chips ---------- */
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 14px 7px 10px;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.chip:hover { background: #fbf3e1; }
+
+.chip.active {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: #fff;
+}
+
+.chip::before {
+  content: "";
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 7px;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask-image: var(--chip-icon);
+  mask-image: var(--chip-icon);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.chip[data-profile-id="wheelchair"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='14' cy='16' r='6'/%3E%3Cpath d='M14 16 L14 6 L18 6 M14 10 L19 16'/%3E%3Ccircle cx='18' cy='6' r='1.4' fill='black' stroke='none'/%3E%3C/svg%3E");
+}
+.chip[data-profile-id="stroller"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 9c0-3 3-5 7-5 3 0 5 2 5 5'/%3E%3Cpath d='M4 9h14l-1 6H7z'/%3E%3Ccircle cx='8' cy='19' r='1.6' fill='black' stroke='none'/%3E%3Ccircle cx='16' cy='19' r='1.6' fill='black' stroke='none'/%3E%3Cpath d='M17 6l2-2'/%3E%3C/svg%3E");
+}
+.chip[data-profile-id="visually_impaired"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='5' r='2' fill='black' stroke='none'/%3E%3Cpath d='M9 8v6l-3 8'/%3E%3Cpath d='M9 14l4 2 3 6'/%3E%3Cpath d='M9 9l6 1 2 9'/%3E%3C/svg%3E");
+}
+.chip[data-profile-id="elderly"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='5' r='2' fill='black' stroke='none'/%3E%3Cpath d='M10 8c-1 2-1 4 0 6l3 7'/%3E%3Cpath d='M13 14l4 2'/%3E%3Cpath d='M17 8v9'/%3E%3Cpath d='M17 8c0-1.6 1.3-2.2 2.2-2.2'/%3E%3C/svg%3E");
+}
+.chip[data-profile-id="carrier"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='8' width='14' height='12' rx='1.5'/%3E%3Cpath d='M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2'/%3E%3Cpath d='M5 13h14'/%3E%3C/svg%3E");
+}
+.chip[data-profile-id="temporary_injury"] {
+  --chip-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M12 8v8M8 12h8'/%3E%3C/svg%3E");
+}
+
+/* ---------- buttons ---------- */
+
+.action-group { margin: 22px 0 20px; }
+
+.primary-btn, .secondary-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 4px;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.primary-btn {
+  background: var(--color-yellow);
+  color: var(--color-navy);
+  border: 2px solid var(--color-navy);
+  box-shadow: 3px 3px 0 var(--color-navy);
+  margin-bottom: 10px;
+}
+
+.secondary-btn {
+  background: #fff;
+  color: var(--color-teal);
+  border: 2px solid var(--color-teal);
+  box-shadow: 3px 3px 0 var(--color-teal);
+}
+
+.primary-btn:hover, .secondary-btn:hover {
+  transform: translate(1px, 1px);
+}
+
+.primary-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-navy);
+}
+
+.secondary-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-teal);
+}
+
+/* ---------- result cards ("route ticket") ---------- */
+
+.result-card, .curb-cut-card {
+  position: relative;
+  border: 1px solid var(--color-line);
+  border-left: 4px solid var(--color-yellow);
+  background: var(--color-panel);
+  padding: 22px 16px 16px;
+  margin-top: 20px;
+  margin-bottom: 18px;
+}
+
+.curb-cut-card { border-left-color: var(--color-teal); }
+
+/* 승차권 절취선 */
+.result-card::before, .curb-cut-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 11px;
+  background-image: radial-gradient(circle at 6px 5px, var(--color-paper) 4.2px, transparent 4.6px);
+  background-size: 13px 11px;
+  background-repeat: repeat-x;
+}
+
+.result-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 6px;
+}
+
+.result-cost {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 10px;
+}
+
+/* 경로 순서 — 출구 번호판과 같은 배지로 순번을 매긴다 */
+.result-path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: pathstep;
+}
+
+.result-path li {
+  counter-increment: pathstep;
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 9px;
+  font-size: 13.5px;
+  line-height: 20px;
+}
+
+.result-path li::before {
+  content: counter(pathstep);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: var(--color-yellow);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 10.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 공통 이용 구간 — 점자블록 돌기를 본뜬 점 마커 */
+.curb-cut-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+}
+
+.curb-cut-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  line-height: 20px;
+}
+
+.curb-cut-list li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-teal);
+  border: 1.5px solid var(--color-navy);
+}
+
+.curb-cut-note {
+  font-size: 12.5px;
+  color: var(--color-ink-soft);
+  line-height: 1.65;
+  margin: 10px 0 0;
+}
+
+.status-line {
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--color-brick);
+  min-height: 18px;
+}
+
+/* ---------- map ---------- */
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-control-zoom a {
+  font-family: var(--font-display) !important;
+  color: var(--color-navy) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--color-yellow) !important;
+}
+
+.leaflet-control-attribution {
+  font-family: var(--font-body);
+  font-size: 11px;
+}

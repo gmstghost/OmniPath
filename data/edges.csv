@@ -1,0 +1,14 @@
+from,to,distance,slope,has_stairs,has_elevator,has_braille_block
+N01,N02,15,1,False,False,True
+N02,N03,10,0,True,False,False
+N01,N10,25,6,False,False,True
+N10,N03,12,5,False,False,True
+N03,N04,8,0,False,False,True
+N04,N05,10,0,False,False,False
+N05,N06,10,0,False,True,False
+N04,N06,18,0,True,False,False
+N06,N07,9,0,False,False,True
+N06,N08,11,0,False,False,True
+N08,N07,7,0,False,False,True
+N07,N09,20,2,False,False,False
+N05,N09,35,1,False,False,False

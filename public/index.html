@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OmniPath — 포용적 보행 경로 안내</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wordmark">OmniPath</div>
+  <p class="tagline">이동성 프로필 기반 포용적 보행 경로 안내</p>
+</header>
+<div class="tactile-strip" aria-hidden="true"></div>
+
+<main class="layout">
+
+  <aside class="panel">
+
+    <section class="field-group">
+      <label for="start-select"><span class="step-num">1</span>출발지</label>
+      <select id="start-select"></select>
+    </section>
+
+    <section class="field-group">
+      <label for="end-select"><span class="step-num">2</span>도착지</label>
+      <select id="end-select"></select>
+    </section>
+
+    <section class="field-group">
+      <label><span class="step-num">3</span>이동성 프로필</label>
+      <div id="profile-chips" class="chip-row"></div>
+    </section>
+
+    <div class="action-group">
+      <button id="find-route-btn" class="primary-btn">경로 찾기</button>
+      <button id="curb-cut-btn" class="secondary-btn">연석 효과 비교 보기</button>
+    </div>
+
+    <section id="result-card" class="result-card" hidden>
+      <div class="result-label">선택한 경로</div>
+      <div id="result-cost" class="result-cost"></div>
+      <ol id="result-path" class="result-path"></ol>
+    </section>
+
+    <section id="curb-cut-card" class="curb-cut-card" hidden>
+      <div class="result-label">여러 프로필이 공통으로 이용한 구간</div>
+      <ul id="curb-cut-list" class="curb-cut-list"></ul>
+      <p class="curb-cut-note">
+        휠체어 이용자를 위해 만든 엘리베이터나 경사로 구간이 다른 프로필의
+        최적 경로에도 함께 포함될수록, 그 구간은 더 넓은 사람들에게
+        이득을 주는 '연석 효과' 구간입니다.
+      </p>
+    </section>
+
+    <p id="status-line" class="status-line" role="status" aria-live="polite"></p>
+
+  </aside>
+
+  <div id="map"></div>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/api.js"></script>
+<script src="js/map.js"></script>
+</body>
+</html>
