@@ -1,0 +1,21 @@
+{
+  "name": "omnipath",
+  "version": "1.0.0",
+  "description": "**OmniPath**는 기존 지도 서비스의 '물리적 최단 거리' 중심 경로 안내가 가진 한계를 극복하고, 사용자의 신체적 조건과 상황에 맞춘 '이동성 프로필'을 기반으로 최적의 보행 경로를 안내하는 포용적 내비게이션 시스템입니다.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "emulators": "firebase emulators:start --import=./firebase_data --export-on-exit=./firebase_data"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmstghost/OmniPath.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gmstghost/OmniPath/issues"
+  },
+  "homepage": "https://github.com/gmstghost/OmniPath#readme"
+}
